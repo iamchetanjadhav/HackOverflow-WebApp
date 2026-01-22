@@ -6,7 +6,7 @@ import FAQ from "@/components/FAQ";
 import Schedule from "@/components/Schedule";
 import KeyDates from "@/components/KeyDates";
 import Special from "@/components/Special";
-import Overiew from "@/components/Overview";
+import Overview from "@/components/Overview";
 import Theme from "@/components/Theme";
 import Gallery from "@/components/Gallery";
 import Statistics from "@/components/Statistics";
@@ -109,7 +109,7 @@ export default function Home() {
       <Special />
 
       {/* Overview */}
-      <Overiew />
+      <Overview />
 
       {/* Gallery */}
       <section id="gallery">
