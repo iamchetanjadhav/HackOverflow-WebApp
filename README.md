@@ -330,7 +330,9 @@ This project is proprietary and confidential. Unauthorized copying, distribution
 - **PHCET** – For hosting and organizing HackOverflow 4.0
 - **Parth Bhoir** – System engineering and server configuration (hosted on home server)
 - **Nirav Thakur** – Design and frontend UI development
+- **Chetan Jadhav** – Stable build creation and maintenance
 - **All Contributors** – For their time and expertise
+
 
 
 
