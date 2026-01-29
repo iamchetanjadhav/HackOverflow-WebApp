@@ -334,7 +334,7 @@ This project is open source for educational and non-commercial use.
 ### 🏢 Commercial & Enterprise Use
 Organizations and companies must obtain written permission before commercial use.
 
-📧 Permission requests: [admin@hackoverflow.tech](mailto:admin@hackoverflow.tech)
+📧 Permission requests: [hackoverflow@mes.ac.in](mailto:hackoverflow@mes.ac.in)
 
 ---
 
