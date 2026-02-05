@@ -39,3 +39,21 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.env.example
+
+# Participant Data
+*.csv
+*.xlsx
+*.xls
+/scripts/
+serviceAccount.json
+.env
+.env.local
+.env.production
