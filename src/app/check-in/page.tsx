@@ -10,7 +10,6 @@ export default function CheckInPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // 🔁 Restore last ticket on refresh
     useEffect(() => {
         const stored = sessionStorage.getItem("hackoverflow_ticket");
         if (stored) {
@@ -54,45 +53,49 @@ export default function CheckInPage() {
 
     if (ticket) {
         return (
-            <main className="min-h-screen bg-[#0F0F0F] text-white px-4 py-10">
-                <div className="text-center mb-8">
+            <main className="min-h-screen bg-[#0F0F0F] text-white overflow-x-hidden px-3 sm:px-4 py-6 sm:py-10">
+                {/* Header */}
+                <div className="text-center mb-6 sm:mb-8 max-w-2xl mx-auto">
                     <span className="inline-block mb-3 rounded-full border border-[#FCB216]/30 bg-[#FCB216]/10 px-4 py-1 text-xs font-semibold tracking-wide text-[#FCB216]">
                         LIVE EVENT
                     </span>
 
-                    <h1 className="text-3xl md:text-4xl font-bold">
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight">
                         Your Hackathon Pass
                     </h1>
 
-                    <p className="mt-2 text-sm text-white/60">
-                        Keep this pass handy throughout the event. Show it at check-in and for venue access.
+                    <p className="mt-2 text-xs sm:text-sm text-white/60">
+                        Keep this pass handy throughout the event. Show it at check-in and
+                        for venue access.
                     </p>
                 </div>
 
                 <div className="flex justify-center">
-                    <BoardingPass
-                        participantName={ticket.full_name}
-                        teamName={ticket.team_name}
-                        participantId={ticket.participant_id}
-                        ticketId={ticket.ticket_id}
-                        teamId={ticket.team_id}
-                        eventDates="March 15–17, 2026"
-                        wifiSsid="HackOverflow_5G"
-                        wifiPassword={ticket.wifi_creds}
-                        roomNo="A-201"
-                        tableNo={ticket.table_number}
-                        welcomeMessage="Welcome to HackOverflow 4.0! We’re thrilled to have you join us for 48 hours of innovation, creativity, and collaboration. Let’s build something amazing 🚀"
-                        checkedInAt={ticket.checked_in_at}
-                        onBack={() => {
-                            setTicket(null);
-                            setParticipantId("");
-                            setTeamId("");
-                            setError(null);
-                        }}
-                    />
-
+                    <div className="w-full max-w-[420px] sm:max-w-[520px] md:max-w-[680px]">
+                        <BoardingPass
+                            participantName={ticket.full_name}
+                            teamName={ticket.team_name}
+                            participantId={ticket.participant_id}
+                            ticketId={ticket.ticket_id}
+                            teamId={ticket.team_id}
+                            eventDates="March 15–17, 2026"
+                            wifiSsid="HackOverflow_5G"
+                            wifiPassword={ticket.wifi_creds}
+                            roomNo="A-201"
+                            tableNo={ticket.table_number}
+                            welcomeMessage="Welcome to HackOverflow 4.0! We’re thrilled to have you join us for 48 hours of innovation, creativity, and collaboration. Let’s build something amazing 🚀"
+                            checkedInAt={ticket.checked_in_at}
+                            onBack={() => {
+                                setTicket(null);
+                                setParticipantId("");
+                                setTeamId("");
+                                setError(null);
+                            }}
+                        />
+                    </div>
                 </div>
-                <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
+
+                <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-5xl mx-auto px-1 sm:px-4">
                     {[
                         {
                             step: "01",
@@ -112,7 +115,7 @@ export default function CheckInPage() {
                     ].map((s) => (
                         <div
                             key={s.step}
-                            className="rounded-xl border border-white/10 bg-black/60 p-5 text-white"
+                            className="rounded-xl border border-white/10 bg-black/60 p-4 sm:p-5"
                         >
                             <span className="inline-block mb-2 rounded-full bg-[#E85D24]/15 px-3 py-1 text-xs font-semibold text-[#FCB216]">
                                 {s.step}
@@ -122,24 +125,22 @@ export default function CheckInPage() {
                         </div>
                     ))}
                 </div>
-
             </main>
         );
     }
 
 
-    // 📝 Check-In Form View
     return (
-        <main className="min-h-screen bg-black flex items-center justify-center p-4">
+        <main className="min-h-screen bg-black flex items-center justify-center overflow-x-hidden px-3 py-6">
             <div className="relative w-full max-w-md">
                 {/* Glow */}
                 <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-orange-500/30 via-yellow-400/10 to-purple-500/20 blur-xl" />
 
                 <form
                     onSubmit={handleSubmit}
-                    className="relative space-y-4 rounded-2xl border border-white/10 bg-black/70 p-6 text-white shadow-2xl backdrop-blur"
+                    className="relative space-y-4 rounded-2xl border border-white/10 bg-black/70 p-5 sm:p-6 text-white shadow-2xl backdrop-blur"
                 >
-                    <h1 className="text-2xl font-bold text-center tracking-wide">
+                    <h1 className="text-xl sm:text-2xl font-bold text-center tracking-wide">
                         HackOverflow 4.0 Check-In
                     </h1>
 
@@ -149,7 +150,7 @@ export default function CheckInPage() {
                         value={participantId}
                         onChange={(e) => setParticipantId(e.target.value)}
                         required
-                        className="w-full rounded-md border border-white/10 bg-black/50 p-3 text-white outline-none focus:border-orange-400"
+                        className="w-full rounded-md border border-white/10 bg-black/50 p-3 text-sm sm:text-base outline-none focus:border-orange-400"
                     />
 
                     <input
@@ -158,7 +159,7 @@ export default function CheckInPage() {
                         value={teamId}
                         onChange={(e) => setTeamId(e.target.value)}
                         required
-                        className="w-full rounded-md border border-white/10 bg-black/50 p-3 text-white outline-none focus:border-orange-400"
+                        className="w-full rounded-md border border-white/10 bg-black/50 p-3 text-sm sm:text-base outline-none focus:border-orange-400"
                     />
 
                     {error && (
