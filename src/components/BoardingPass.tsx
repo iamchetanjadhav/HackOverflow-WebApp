@@ -13,6 +13,13 @@ import {
     Calendar,
 } from "lucide-react";
 
+/* ================== TYPES ================== */
+
+interface FirestoreTimestamp {
+    seconds: number;
+    nanoseconds: number;
+}
+
 interface BoardingPassProps {
     participantName: string;
     teamName: string;
@@ -25,9 +32,11 @@ interface BoardingPassProps {
     roomNo: string;
     tableNo: string;
     welcomeMessage: string;
-    checkedInAt: string; // 🔥 from Firebase
+    checkedInAt: FirestoreTimestamp; // ✅ Firestore-safe
     onBack: () => void;
 }
+
+/* ================== COMPONENT ================== */
 
 export function BoardingPass({
     participantName,
@@ -52,10 +61,15 @@ export function BoardingPass({
         setTimeout(() => setCopied(null), 1500);
     }
 
-    const formattedCheckInTime = new Date(checkedInAt).toLocaleString("en-IN", {
-        dateStyle: "medium",
-        timeStyle: "short",
-    });
+    /* ✅ Proper Firestore Timestamp handling */
+    const formattedCheckInTime =
+        checkedInAt && typeof checkedInAt.seconds === "number"
+            ? new Date(checkedInAt.seconds * 1000).toLocaleString("en-IN", {
+                dateStyle: "medium",
+                timeStyle: "short",
+            })
+            : "Not Available";
+
 
     return (
         <div className="relative w-full max-w-3xl mx-auto">
@@ -63,7 +77,7 @@ export function BoardingPass({
             <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-[#E85D24]/25 via-[#FCB216]/10 to-[#63205F]/20 blur-xl" />
 
             <div className="relative rounded-2xl bg-[#0F0F0F] border border-white/10 text-white overflow-hidden">
-                {/* Accent line */}
+                {/* Accent */}
                 <div className="h-[3px] bg-[#E85D24]" />
 
                 {/* Header */}
@@ -85,7 +99,7 @@ export function BoardingPass({
                     </div>
                 </div>
 
-                {/* Content */}
+                {/* Body */}
                 <div className="p-6 space-y-6">
                     {/* Participant + Team */}
                     <div className="flex justify-between items-end">
@@ -104,17 +118,36 @@ export function BoardingPass({
 
                     {/* IDs */}
                     <div className="grid grid-cols-3 gap-4">
-                        <InfoCard icon={<Hash />} label="Participant ID" value={participantId}
-                            copied={copied === "pid"} onCopy={() => copy(participantId, "pid")} />
-                        <InfoCard icon={<Hash />} label="Ticket ID" value={ticketId}
-                            copied={copied === "tid"} onCopy={() => copy(ticketId, "tid")} />
-                        <InfoCard icon={<Hash />} label="Team ID" value={teamId}
-                            copied={copied === "team"} onCopy={() => copy(teamId, "team")} />
+                        <InfoCard
+                            icon={<Hash />}
+                            label="Participant ID"
+                            value={participantId}
+                            copied={copied === "pid"}
+                            onCopy={() => copy(participantId, "pid")}
+                        />
+                        <InfoCard
+                            icon={<Hash />}
+                            label="Ticket ID"
+                            value={ticketId}
+                            copied={copied === "tid"}
+                            onCopy={() => copy(ticketId, "tid")}
+                        />
+                        <InfoCard
+                            icon={<Hash />}
+                            label="Team ID"
+                            value={teamId}
+                            copied={copied === "team"}
+                            onCopy={() => copy(teamId, "team")}
+                        />
                     </div>
 
-                    {/* Dates / Room / Table */}
+                    {/* Event Details */}
                     <div className="grid grid-cols-3 gap-4">
-                        <DetailCard icon={<Calendar />} label="Event Dates" value={eventDates} />
+                        <DetailCard
+                            icon={<Calendar />}
+                            label="Event Dates"
+                            value={eventDates}
+                        />
                         <HighlightCard label="Room No" value={roomNo} />
                         <HighlightCard label="Table No" value={tableNo} />
                     </div>
@@ -131,7 +164,10 @@ export function BoardingPass({
                                 <p className="text-xs uppercase text-white/50">Network</p>
                                 <div className="flex items-center gap-2">
                                     <span className="font-mono">{wifiSsid}</span>
-                                    <CopyBtn copied={copied === "ssid"} onClick={() => copy(wifiSsid, "ssid")} />
+                                    <CopyBtn
+                                        copied={copied === "ssid"}
+                                        onClick={() => copy(wifiSsid, "ssid")}
+                                    />
                                 </div>
                             </div>
 
@@ -139,7 +175,10 @@ export function BoardingPass({
                                 <p className="text-xs uppercase text-white/50">Password</p>
                                 <div className="flex items-center gap-2">
                                     <span className="font-mono">{wifiPassword}</span>
-                                    <CopyBtn copied={copied === "pwd"} onClick={() => copy(wifiPassword, "pwd")} />
+                                    <CopyBtn
+                                        copied={copied === "pwd"}
+                                        onClick={() => copy(wifiPassword, "pwd")}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -176,7 +215,7 @@ export function BoardingPass({
     );
 }
 
-/* ---------- Helper Components ---------- */
+/* ================== HELPERS ================== */
 
 function InfoCard({ icon, label, value, copied, onCopy }: any) {
     return (

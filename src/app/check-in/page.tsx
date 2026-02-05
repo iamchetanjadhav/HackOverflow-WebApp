@@ -52,11 +52,9 @@ export default function CheckInPage() {
         }
     }
 
-    // 🎟 Boarding Pass View
     if (ticket) {
         return (
             <main className="min-h-screen bg-[#0F0F0F] text-white px-4 py-10">
-                {/* Page Header */}
                 <div className="text-center mb-8">
                     <span className="inline-block mb-3 rounded-full border border-[#FCB216]/30 bg-[#FCB216]/10 px-4 py-1 text-xs font-semibold tracking-wide text-[#FCB216]">
                         LIVE EVENT
@@ -71,7 +69,6 @@ export default function CheckInPage() {
                     </p>
                 </div>
 
-                {/* Ticket */}
                 <div className="flex justify-center">
                     <BoardingPass
                         participantName={ticket.full_name}
@@ -85,6 +82,7 @@ export default function CheckInPage() {
                         roomNo="A-201"
                         tableNo={ticket.table_number}
                         welcomeMessage="Welcome to HackOverflow 4.0! We’re thrilled to have you join us for 48 hours of innovation, creativity, and collaboration. Let’s build something amazing 🚀"
+                        checkedInAt={ticket.checked_in_at}
                         onBack={() => {
                             setTicket(null);
                             setParticipantId("");

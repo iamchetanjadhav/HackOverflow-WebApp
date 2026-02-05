@@ -2,10 +2,20 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/firebase-admin";
 import { generateTicketId } from "@/lib/ticket";
 
+function normalizeTimestamp(ts: any) {
+    if (!ts) return null;
+
+    const seconds = ts.seconds ?? ts._seconds;
+    const nanoseconds = ts.nanoseconds ?? ts._nanoseconds ?? 0;
+
+    if (typeof seconds !== "number") return null;
+
+    return { seconds, nanoseconds };
+}
+
 export async function POST(req: Request) {
     try {
-        const body = await req.json();
-        const { participant_id, team_id } = body;
+        const { participant_id, team_id } = await req.json();
 
         if (!participant_id || !team_id) {
             return NextResponse.json(
@@ -25,7 +35,6 @@ export async function POST(req: Request) {
         }
 
         const data = snap.data();
-
         if (!data) {
             return NextResponse.json(
                 { error: "Invalid participant data" },
@@ -33,47 +42,58 @@ export async function POST(req: Request) {
             );
         }
 
-        // 🔁 Retrieval check (already checked in)
-        if (data?.check_in_status === true) {
+        if (data.check_in_status === true) {
             return NextResponse.json({
                 alreadyCheckedIn: true,
                 ticket: {
+                    participant_id: data.participant_id ?? snap.id,
                     ticket_id: data.ticket_id,
                     full_name: data.full_name,
                     team_name: data.team_name,
                     team_id: data.team_id,
                     table_number: data.table_number,
                     wifi_creds: data.wifi_creds,
+                    event_dates: data.event_dates ?? "",
+                    room_no: data.room_no ?? "",
+                    welcome_message: data.welcome_message ?? "",
+                    checked_in_at: normalizeTimestamp(data.checked_in_at),
                 },
             });
         }
 
-        // 🔐 Verification
-        if (data?.team_id !== team_id) {
+        if (data.team_id !== team_id) {
             return NextResponse.json(
                 { error: "Verification failed" },
                 { status: 403 }
             );
         }
 
-        // ✅ First-time check-in
+        const now = new Date();
         const ticketId = generateTicketId(participant_id);
 
         await ref.update({
             check_in_status: true,
             ticket_id: ticketId,
-            checked_in_at: new Date(),
+            checked_in_at: now,
         });
 
         return NextResponse.json({
             success: true,
             ticket: {
+                participant_id: data.participant_id ?? snap.id,
                 ticket_id: ticketId,
                 full_name: data.full_name,
                 team_name: data.team_name,
                 team_id: data.team_id,
                 table_number: data.table_number,
                 wifi_creds: data.wifi_creds,
+                event_dates: data.event_dates ?? "",
+                room_no: data.room_no ?? "",
+                welcome_message: data.welcome_message ?? "",
+                checked_in_at: {
+                    seconds: Math.floor(now.getTime() / 1000),
+                    nanoseconds: 0,
+                },
             },
         });
     } catch (err) {
