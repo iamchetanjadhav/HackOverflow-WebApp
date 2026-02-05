@@ -26,6 +26,13 @@ export async function POST(req: Request) {
 
         const data = snap.data();
 
+        if (!data) {
+            return NextResponse.json(
+                { error: "Invalid participant data" },
+                { status: 500 }
+            );
+        }
+
         // 🔁 Retrieval check (already checked in)
         if (data?.check_in_status === true) {
             return NextResponse.json({
