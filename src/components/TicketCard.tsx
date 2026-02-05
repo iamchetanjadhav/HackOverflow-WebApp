@@ -2,7 +2,12 @@
 
 import { motion } from "framer-motion";
 
-export default function TicketCard({ ticket }: { ticket: any }) {
+type TicketCardProps = {
+    ticket: any;
+    onBack: () => void;
+};
+
+export default function TicketCard({ ticket, onBack }: TicketCardProps) {
     return (
         <motion.div
             initial={{ opacity: 0, y: 30, scale: 0.95 }}
@@ -23,15 +28,33 @@ export default function TicketCard({ ticket }: { ticket: any }) {
                 </div>
 
                 <div className="space-y-2 text-sm">
-                    <p><span className="text-white/60">Name</span>: {ticket.full_name}</p>
-                    <p><span className="text-white/60">Team</span>: {ticket.team_name}</p>
-                    <p><span className="text-white/60">Team ID</span>: {ticket.team_id}</p>
-                    <p><span className="text-white/60">Table</span>: {ticket.table_number}</p>
-                    <p><span className="text-white/60">Wi-Fi</span>: {ticket.wifi_creds}</p>
+                    <p>
+                        <span className="text-white/60">Name</span>: {ticket.full_name}
+                    </p>
+                    <p>
+                        <span className="text-white/60">Team</span>: {ticket.team_name}
+                    </p>
+                    <p>
+                        <span className="text-white/60">Team ID</span>: {ticket.team_id}
+                    </p>
+                    <p>
+                        <span className="text-white/60">Table</span>: {ticket.table_number}
+                    </p>
+                    <p>
+                        <span className="text-white/60">Wi-Fi</span>: {ticket.wifi_creds}
+                    </p>
                 </div>
 
+                <button
+                    onClick={onBack}
+                    className="w-full mt-4 rounded-md border border-white/20 py-2 text-sm text-white hover:bg-white/10 transition"
+                >
+                    ← Back to new check-in
+                </button>
+
                 <p className="text-xs text-center text-white/50">
-                    Keep this screen open or take a screenshot
+                    You can check in another participant.
+                    Refreshing will restore the last ticket.
                 </p>
             </div>
         </motion.div>
